@@ -67,6 +67,17 @@ class Keygen(QDialog):
         self.main_layout.addLayout(self.path_to_root)
 
 
+
+        self.text_path = QHBoxLayout()
+
+        self.Output2 = QtWidgets.QLineEdit(self)
+        self.Output2.setReadOnly(True)
+        self.text_path.addWidget(self.Output2)
+
+        self.main_layout.addLayout(self.text_path)
+
+
+
         self.label_crt_layout = QHBoxLayout()
 
         self.label_crt = QLabel("Путь к сертификату (.crt):", self)
@@ -78,6 +89,19 @@ class Keygen(QDialog):
         self.label_crt_layout.addWidget(self.button_crt)
 
         self.main_layout.addLayout(self.label_crt_layout)
+
+
+
+
+        self.text_path2 = QHBoxLayout()
+
+        self.Output3 = QtWidgets.QLineEdit(self)
+        self.Output3.setReadOnly(True)
+        self.text_path2.addWidget(self.Output3)
+
+        self.main_layout.addLayout(self.text_path2)
+
+
 
 
         self.label_key_layout = QHBoxLayout()
@@ -93,13 +117,17 @@ class Keygen(QDialog):
 
 
 
-        self.text_path = QHBoxLayout()
 
-        self.Output2 = QtWidgets.QTextEdit(self)
-        self.Output2.setReadOnly(True)
-        self.text_path.addWidget(self.Output2)
+        self.text_path3 = QHBoxLayout()
 
-        self.main_layout.addLayout(self.text_path)
+        self.Output4 = QtWidgets.QLineEdit(self)
+        self.Output4.setReadOnly(True)
+        self.text_path3.addWidget(self.Output4)
+
+        self.main_layout.addLayout(self.text_path3)
+
+
+
 
         self.armi_number = QHBoxLayout()
 
@@ -196,10 +224,6 @@ class Keygen(QDialog):
         self.infowindow = InfoWindow.InfoWindow(text, self)
         self.infowindow.exec_()
     
-    def output(self, text, color='black'):
-        html_text = f'<font color="{color}">{text}</font>'
-        self.Output2.append(html_text)
-
     def showDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.ShowDirsOnly
@@ -208,7 +232,7 @@ class Keygen(QDialog):
 
         if directory:
             self.armi_instance.defprint(f"Your chois ROOT PATH: {directory}")
-            self.output(f"{directory}")
+            self.Output2.setText(directory)
 
     def select_crt_file(self):
         options = QFileDialog.Options()
@@ -221,7 +245,7 @@ class Keygen(QDialog):
         )
         if file_name:
             self.crt_path = file_name
-            self.label_crt.setText(f"Выбрано: {file_name}")
+            self.Output3.setText(file_name)
 
     def select_key_file(self):
         options = QFileDialog.Options()
@@ -234,7 +258,7 @@ class Keygen(QDialog):
         )
         if file_name:
             self.key_path = file_name
-            self.label_key.setText(f"Выбрано: {file_name}")
+            self.Output4.setText(file_name)
 
     def refresh_selection3(self, text):
         self.selected_armi_number = str(text).zfill(3)
@@ -264,6 +288,9 @@ class Keygen(QDialog):
         if self.directory == "":
             self.armi_instance.defprint(f"!!! Info: Not path", "red")
 
+        if self.key_path == "":
+            self.armi_instance.defprint(f"!!! Info: Not key", "red")
+
         if time == "":
             self.armi_instance.defprint(f"!!! Info: Not time", "red")
         if time == "0":
@@ -285,7 +312,7 @@ class Keygen(QDialog):
             self.password = ""
             self.armi_instance.defprint(f"!!! Info: Password2 is less than 8 characters long", "red")
 
-        if self.directory and time and self.password and self.selected_armi_number_number:
+        if self.directory and self.key_path and self.crt_path and time and self.password and self.selected_armi_number_number:
             self.armi_instance.defprint(
                 f"Correct Info: {self.directory} {self.textarmi}-"
                 f"{self.selected_processor}-{self.selected_organization}-"
@@ -309,12 +336,16 @@ class Keygen(QDialog):
 
     def on_crypto_finished(self):
         self.button_OK.setEnabled(True)
-        self.open_window(self.directory)
+        self.open_window(f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}")
         self.close()
 
 
     def check_files_with_prefix(self):
-        keys_dir = os.path.join(self.directory, 'keys')
+        # keys_dir = os.path.join(self.directory, 'keys')
+
+        if  os.path.isdir(f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}"):
+            self.armi_instance.defprint(f"Directory '{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}' exist.", "red")
+            return False
 
         files_to_check = [
             f"{self.selected_organization.upper()}_armi-{self.selected_armi_number}.crt",
@@ -334,7 +365,7 @@ class Keygen(QDialog):
         ]   
 
         for file in files_to_check:
-            file_path = os.path.join(keys_dir, file)
+            file_path = os.path.join(self.directory, file)
             if os.path.isfile(file_path):
                 self.armi_instance.defprint(f"File '{file_path}' exists.", "red")
                 return False

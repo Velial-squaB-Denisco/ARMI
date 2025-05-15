@@ -22,7 +22,11 @@ class OpenSSLKeyCertGenerator:
 
         self.ECDSA_key = ""
 
-        self.prefix = str(f"{self.keys_dir}\{self.textarmi}-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}")
+        self.folder_name = str(f"{self.textarmi}-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}")
+        self.folder_path = str(f"{self.keys_dir}\{self.folder_name}")
+        os.makedirs(self.folder_path, exist_ok=True)
+
+        self.prefix = str(f"{self.folder_path}\{self.textarmi}-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}")
 
         # Переменные для хранения результата и выводов
         self.result = 0
