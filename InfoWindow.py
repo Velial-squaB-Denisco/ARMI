@@ -4,7 +4,7 @@ class InfoWindow(QDialog):
     def __init__(self, text, parent=None):
         super().__init__(parent)
 
-        self.text_content = f"All your files are saved in: {text}keys"
+        self.text_content = f"All your files are saved in: {text}"
 
         self.setWindowTitle("Info")
         self.setGeometry(1050, 250, 350, 300)
