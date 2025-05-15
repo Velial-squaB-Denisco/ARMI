@@ -10,7 +10,7 @@ ERR_UNKNOWN = -2
 ERR_AES_KEY = -3
 
 class OpenSSLKeyCertGenerator:
-    def __init__(self, keys_dir, textarmi, selected_processor, selected_organization, selected_armi_number, selected_armi_number_number, time ,password):
+    def __init__(self, keys_dir, textarmi, selected_processor, selected_organization, selected_armi_number, selected_armi_number_number, time ,password, key_path, crt_path):
         self.keys_dir = keys_dir
         self.textarmi = textarmi
         self.selected_processor = selected_processor
@@ -19,6 +19,8 @@ class OpenSSLKeyCertGenerator:
         self.selected_armi_number_number = selected_armi_number_number
         self.time = time
         self.password = password
+        self.key_path = key_path
+        self.crt_path = crt_path
 
         self.ECDSA_key = ""
 
@@ -201,8 +203,8 @@ class OpenSSLKeyCertGenerator:
 
     def make_CERTIFICATE(self):
         # Пути для сохранения ключей и сертификатов
-        ca_key_path = self.keys_dir + f'\{self.selected_organization}_armi-root.key'  # Путь к приватному ключу вашего CA
-        ca_crt_path = self.keys_dir + f'\{self.selected_organization}_armi-root.crt'  # Путь к корневому сертификату CA
+        ca_key_path = self.key_path  # Путь к приватному ключу вашего CA
+        ca_crt_path = self.crt_path  # Путь к корневому сертификату CA
         # server_key_path = self.prefix + '(cert).key'
         server_csr_path = self.prefix + '.csr'
         server_crt_path = self.prefix + '.crt'

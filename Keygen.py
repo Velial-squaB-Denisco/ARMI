@@ -336,7 +336,7 @@ class Keygen(QDialog):
             generator = myopenssl.OpenSSLKeyCertGenerator(
                 self.directory, self.textarmi, self.selected_processor, 
                 self.selected_organization, self.selected_armi_number, 
-                self.selected_armi_number_number, self.time, self.password
+                self.selected_armi_number_number, self.time, self.password, self.key_path, self.crt_path
             )
 
             self.worker = CryptoWorker(generator)
@@ -356,6 +356,7 @@ class Keygen(QDialog):
 
         if  os.path.isdir(f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}"):
             self.armi_instance.defprint(f"Directory '{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}' exist.", "red")
+            self.directory = ""
             return False
 
         files_to_check = [
