@@ -37,8 +37,8 @@ class Keygen(QDialog):
         self.directory = ""
         self.textarmi = "armi"
         self.password = ""
-        self.aes_dir = ""
-        self.keys_dir = ""
+        self.key_path = ""
+        self.crt_path = ""
         self.time = ""
 
         self.setWindowTitle("ARMI")
@@ -65,6 +65,33 @@ class Keygen(QDialog):
         self.path_to_root.addWidget(self.button_folder)
 
         self.main_layout.addLayout(self.path_to_root)
+
+
+        self.label_crt_layout = QHBoxLayout()
+
+        self.label_crt = QLabel("Путь к сертификату (.crt):", self)
+        self.label_crt_layout.addWidget(self.label_crt)
+
+
+        self.button_crt = QPushButton('Выбрать файл')
+        self.button_crt.clicked.connect(self.select_crt_file)
+        self.label_crt_layout.addWidget(self.button_crt)
+
+        self.main_layout.addLayout(self.label_crt_layout)
+
+
+        self.label_key_layout = QHBoxLayout()
+
+        self.label_key = QLabel("Путь к приватному ключу (.key):", self)
+        self.label_key_layout.addWidget(self.label_key)
+
+        self.button_key = QPushButton('Выбрать файл')
+        self.button_key.clicked.connect(self.select_key_file)
+        self.label_key_layout.addWidget(self.button_key)
+
+        self.main_layout.addLayout(self.label_key_layout)
+
+
 
         self.text_path = QHBoxLayout()
 
@@ -120,7 +147,7 @@ class Keygen(QDialog):
 
         self.lable_input_password = QHBoxLayout()
 
-        self.text_lable_input_password = QtWidgets.QLabel("Введите пароль")
+        self.text_lable_input_password = QtWidgets.QLabel("Введите пароль для генерации приватных ключей ARMI")
         self.lable_input_password.addWidget(self.text_lable_input_password)
         self.main_layout.addLayout(self.lable_input_password)
 
@@ -183,6 +210,32 @@ class Keygen(QDialog):
             self.armi_instance.defprint(f"Your chois ROOT PATH: {directory}")
             self.output(f"{directory}")
 
+    def select_crt_file(self):
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            "Выберите .crt файл",
+            "",
+            "Certificate Files (*.crt)",
+            options=options
+        )
+        if file_name:
+            self.crt_path = file_name
+            self.label_crt.setText(f"Выбрано: {file_name}")
+
+    def select_key_file(self):
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            "Выберите .key файл",
+            "",
+            "Key Files (*.key)",
+            options=options
+        )
+        if file_name:
+            self.key_path = file_name
+            self.label_key.setText(f"Выбрано: {file_name}")
+
     def refresh_selection3(self, text):
         self.selected_armi_number = str(text).zfill(3)
 
@@ -197,7 +250,6 @@ class Keygen(QDialog):
         self.armi_instance.defprint("|||============|||")
 
         if self.directory:
-            # boolean = self.check_path()
             boolean = False
             if self.directory == "":
                 boolean = False
@@ -244,7 +296,7 @@ class Keygen(QDialog):
             self.time = time
 
             generator = myopenssl.OpenSSLKeyCertGenerator(
-                self.keys_dir, self.textarmi, self.selected_processor, 
+                self.directory, self.textarmi, self.selected_processor, 
                 self.selected_organization, self.selected_armi_number, 
                 self.selected_armi_number_number, self.time, self.password
             )
@@ -260,42 +312,6 @@ class Keygen(QDialog):
         self.open_window(self.directory)
         self.close()
 
-    # def check_path(self):
-    #     aes_dir = os.path.join(self.directory, 'aes')
-    #     keys_dir = os.path.join(self.directory, 'keys')
-
-    #     if not os.path.isdir(aes_dir):
-    #         self.armi_instance.defprint(f"Directory '{aes_dir}' does not exist.", "red")
-    #         return False
-
-    #     if not os.path.isdir(keys_dir):
-    #         self.armi_instance.defprint(f"Directory '{keys_dir}' does not exist.", "red")
-    #         return False
-
-    #     aes_master_path = os.path.join(aes_dir, 'aes_master.aes')
-    #     if not os.path.isfile(aes_master_path):
-    #         self.armi_instance.defprint(f"File '{aes_master_path}' does not exist.", "red")
-    #         return False
-
-    #     keys_files = [
-    #         f"{self.selected_organization.upper()}_armi-root.crt",
-    #         f"{self.selected_organization.upper()}_armi-root.csr",
-    #         f"{self.selected_organization.upper()}_armi-root.ext",
-    #         f"{self.selected_organization.upper()}_armi-root.key",
-    #         f"{self.selected_organization.upper()}_armi-root.key-pwd",
-    #         f"{self.selected_organization.upper()}_armi-root.pub",
-    #     ]
-
-    #     for file in keys_files:
-    #         file_path = os.path.join(keys_dir, file)
-    #         if not os.path.isfile(file_path):
-    #             self.armi_instance.defprint(f"File '{file_path}' does not exist.", "red")
-    #             return False
-
-    #     self.armi_instance.defprint("ROOT PATH: All required directories and files are present.", "green")
-    #     self.aes_dir = aes_dir
-    #     self.keys_dir = keys_dir
-    #     return True
 
     def check_files_with_prefix(self):
         keys_dir = os.path.join(self.directory, 'keys')
@@ -324,5 +340,4 @@ class Keygen(QDialog):
                 return False
 
         self.armi_instance.defprint("There are no files", "green")
-        self.keys_dir = self.directory
         return True
