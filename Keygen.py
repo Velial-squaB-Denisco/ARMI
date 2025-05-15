@@ -288,8 +288,19 @@ class Keygen(QDialog):
         if self.directory == "":
             self.armi_instance.defprint(f"!!! Info: Not path", "red")
 
+        if self.crt_path == "":
+            self.armi_instance.defprint(f"!!! Info: Not crt", "red")
+
+        if not self.crt_path.endswith("root.crt"):
+            self.key_path = ""
+            self.armi_instance.defprint(f"!!! Info: This is not root crt", "red")
+
         if self.key_path == "":
             self.armi_instance.defprint(f"!!! Info: Not key", "red")
+
+        if not self.key_path.endswith("root.key"):
+            self.key_path = ""
+            self.armi_instance.defprint(f"!!! Info: This is not root key", "red")
 
         if time == "":
             self.armi_instance.defprint(f"!!! Info: Not time", "red")
