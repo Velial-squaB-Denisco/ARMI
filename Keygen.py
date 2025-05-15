@@ -82,7 +82,7 @@ class Keygen(QDialog):
 
         self.label_key_layout = QHBoxLayout()
 
-        self.label_key = QLabel("Путь к приватному ключу (.key):", self)
+        self.label_key = QLabel("Путь к приватному корневому ключу (.key):", self)
         self.label_key_layout.addWidget(self.label_key)
 
         self.button_key = QPushButton('Выбрать файл')
@@ -108,7 +108,7 @@ class Keygen(QDialog):
 
         self.label_crt_layout = QHBoxLayout()
 
-        self.label_crt = QLabel("Путь к сертификату (.crt):", self)
+        self.label_crt = QLabel("Путь к корневому сертификату (.crt):", self)
         self.label_crt_layout.addWidget(self.label_crt)
 
 
@@ -289,22 +289,28 @@ class Keygen(QDialog):
             else:
                 self.check_files_with_prefix()
 
+        org = ""
+        if self.selected_organization == "pk":
+            org = f"{self.selected_organization.upper()}_"
+        if self.selected_organization == "rr":
+            org = "|"
+
         if self.directory == "":
             self.armi_instance.defprint(f"!!! Info: Not path", "red")
-
-        if self.crt_path == "":
-            self.armi_instance.defprint(f"!!! Info: Not crt", "red")
-
-        if not self.crt_path.endswith("root.crt"):
-            self.key_path = ""
-            self.armi_instance.defprint(f"!!! Info: This is not root crt", "red")
 
         if self.key_path == "":
             self.armi_instance.defprint(f"!!! Info: Not key", "red")
 
-        if not self.key_path.endswith("root.key"):
+        if not self.key_path.endswith(f"{org}armi-root.key"):
             self.key_path = ""
             self.armi_instance.defprint(f"!!! Info: This is not root key", "red")
+
+        if self.crt_path == "":
+            self.armi_instance.defprint(f"!!! Info: Not crt", "red")
+
+        if not self.crt_path.endswith(f"{org}armi-root.crt"):
+            self.key_path = ""
+            self.armi_instance.defprint(f"!!! Info: This is not root crt", "red")
 
         if time == "":
             self.armi_instance.defprint(f"!!! Info: Not time", "red")
