@@ -295,22 +295,29 @@ class Keygen(QDialog):
         if self.selected_organization == "rr":
             org = ""
 
+        key = ""
+        crt = ""
+
         if self.directory == "":
             self.armi_instance.defprint(f"!!! Info: Not path", "red")
 
         if self.key_path == "":
             self.armi_instance.defprint(f"!!! Info: Not key", "red")
+        else:
+            key = f"{org}armi-root.key"
 
-        if not self.key_path.endswith(f"{org}armi-root.key"):
+        if self.key_path.split('/')[-1] != (key):
             self.key_path = ""
-            self.armi_instance.defprint(f"!!! Info: This is not root key", "red")
+            self.armi_instance.defprint(f"!!! Info: This is not {self.selected_organization} root key", "red")
 
         if self.crt_path == "":
             self.armi_instance.defprint(f"!!! Info: Not crt", "red")
+        else:
+            crt = f"{org}armi-root.crt"
 
-        if not self.crt_path.endswith(f"{org}armi-root.crt"):
+        if self.crt_path.split('/')[-1] != crt:
             self.key_path = ""
-            self.armi_instance.defprint(f"!!! Info: This is not root crt", "red")
+            self.armi_instance.defprint(f"!!! Info: This is not {self.selected_organization} root crt", "red")
 
         if time == "":
             self.armi_instance.defprint(f"!!! Info: Not time", "red")
