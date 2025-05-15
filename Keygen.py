@@ -78,30 +78,6 @@ class Keygen(QDialog):
 
 
 
-        self.label_crt_layout = QHBoxLayout()
-
-        self.label_crt = QLabel("Путь к сертификату (.crt):", self)
-        self.label_crt_layout.addWidget(self.label_crt)
-
-
-        self.button_crt = QPushButton('Выбрать файл')
-        self.button_crt.clicked.connect(self.select_crt_file)
-        self.label_crt_layout.addWidget(self.button_crt)
-
-        self.main_layout.addLayout(self.label_crt_layout)
-
-
-
-
-        self.text_path2 = QHBoxLayout()
-
-        self.Output3 = QtWidgets.QLineEdit(self)
-        self.Output3.setReadOnly(True)
-        self.text_path2.addWidget(self.Output3)
-
-        self.main_layout.addLayout(self.text_path2)
-
-
 
 
         self.label_key_layout = QHBoxLayout()
@@ -125,6 +101,33 @@ class Keygen(QDialog):
         self.text_path3.addWidget(self.Output4)
 
         self.main_layout.addLayout(self.text_path3)
+
+
+
+
+
+        self.label_crt_layout = QHBoxLayout()
+
+        self.label_crt = QLabel("Путь к сертификату (.crt):", self)
+        self.label_crt_layout.addWidget(self.label_crt)
+
+
+        self.button_crt = QPushButton('Выбрать файл')
+        self.button_crt.clicked.connect(self.select_crt_file)
+        self.label_crt_layout.addWidget(self.button_crt)
+
+        self.main_layout.addLayout(self.label_crt_layout)
+
+
+
+
+        self.text_path2 = QHBoxLayout()
+
+        self.Output3 = QtWidgets.QLineEdit(self)
+        self.Output3.setReadOnly(True)
+        self.text_path2.addWidget(self.Output3)
+
+        self.main_layout.addLayout(self.text_path2)
 
 
 
@@ -170,6 +173,7 @@ class Keygen(QDialog):
         # Создаем виджет для ввода числа
         self.number_input = QLineEdit(self)
         self.number_input.setPlaceholderText('Введите число дней')
+        self.number_input.setText("30000")
         self.src_time.addWidget(self.number_input)
         self.main_layout.addLayout(self.src_time)
 
