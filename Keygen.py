@@ -293,7 +293,7 @@ class Keygen(QDialog):
         if self.selected_organization == "pk":
             org = f"{self.selected_organization.upper()}_"
         if self.selected_organization == "rr":
-            org = "|"
+            org = ""
 
         if self.directory == "":
             self.armi_instance.defprint(f"!!! Info: Not path", "red")
