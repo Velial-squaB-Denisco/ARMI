@@ -239,7 +239,7 @@ class Keygen(QDialog):
         self.directory = directory
 
         if directory:
-            self.armi_instance.defprint(f"Your chois ROOT PATH: {directory}")
+            self.armi_instance.defprint(f"Ваш выбранный путь: {directory}")
             self.Output2.setText(directory)
 
     def select_crt_file(self):
@@ -284,7 +284,6 @@ class Keygen(QDialog):
 
     def openssl_version(self):
         def parse_openssl_version(version_str):
-            
             parts = re.match(r"OpenSSL (\d+\.\d+\.\d+\w*)", version_str)
             if not parts:
                 return None, None, None, version_str
@@ -294,7 +293,10 @@ class Keygen(QDialog):
             
             major = int(version_numbers[0])
             minor = int(version_numbers[1]) if len(version_numbers) > 1 else 0
-            patch = version_numbers[2] if len(version_numbers) > 2 else "0"
+            patch_level = version_numbers[2] if len(version_numbers) > 2 else "0"
+            
+            patch = re.match(r"\d+", patch_level).group() if re.match(r"\d+", patch_level) else "0"
+            patch = int(patch)
             
             return major, minor, patch, full_version
 
@@ -306,30 +308,38 @@ class Keygen(QDialog):
                 check=True
             )
             openssl_output = result.stdout.strip()
-            self.armi_instance.defprint(openssl_output)
+            self.armi_instance.defprint(f"Обнаружена версия OpenSSL: {openssl_output}", "blue")
             
-            # Парсим версию
             major, minor, patch, full_version = parse_openssl_version(openssl_output)
             
             if major is None:
-                self.armi_instance.defprint("Не удалось распознать версию OpenSSL")
+                self.armi_instance.defprint("Ошибка: Не удалось распознать версию OpenSSL", "red")
                 return False
-            else:
-                if major >= 3:
-                    self.armi_instance.defprint("OpenSSL версии 3.x.x! Требуется версия ниже 3")
-                    return False
-                
-                if full_version != "1.1.1w":
-                    self.armi_instance.defprint("Версия OpenSSL не 1.1.1w")
-                    return False
+
+            is_supported = (
+                (major == 1 and minor == 1 and patch >= 1)  
+                or (major == 1 and minor > 1)               
+                or (major == 2 and minor >= 0)              
+            )
+
+            if not is_supported:
+                self.armi_instance.defprint(
+                    f"Требуется OpenSSL >= 1.1.1 или < 3.x.x (обнаружено: {full_version})", 
+                    "red"
+                )
+                return False
+
+            if full_version != "1.1.1w":
+                self.armi_instance.defprint(
+                    f"Тестирование проводилось на версии 1.1.1w (ваша версия: {full_version})", "yellow")
 
             return True
-                    
+
         except subprocess.CalledProcessError:
-            self.armi_instance.defprint("Ошибка при выполнении команды openssl")
+            self.armi_instance.defprint("Ошибка при выполнении команды openssl", "red")
             return False
         except FileNotFoundError:
-            self.armi_instance.defprint("OpenSSL не установлен в системе!")
+            self.armi_instance.defprint("OpenSSL не установлен в системе!", "red")
             return False
 
 
@@ -415,7 +425,7 @@ class Keygen(QDialog):
 
         if self.directory and self.key_path and self.crt_path and time and self.password and self.selected_armi_number_number and self.version:
             self.armi_instance.defprint(
-                f"Correct Info: {self.directory} {self.textarmi}-"
+                f"Ваш выбор: {self.directory} {self.textarmi}-"
                 f"{self.selected_processor}-{self.selected_organization}-"
                 f"{self.selected_armi_number}-{self.selected_armi_number_number}"
                 f"  time: {time}  password: {self.password}", "green")
@@ -472,5 +482,5 @@ class Keygen(QDialog):
                 self.armi_instance.defprint(f"File '{file_path}' exists.", "red")
                 return False
 
-        self.armi_instance.defprint("There are no files", "green")
+        self.armi_instance.defprint("Файлы для перезаписи не найдены", "green")
         return True
