@@ -1,5 +1,7 @@
 import os
+import re
 import myopenssl
+import subprocess
 import InfoWindow
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QFileDialog, QLineEdit, QDialog
@@ -40,6 +42,8 @@ class Keygen(QDialog):
         self.key_path = ""
         self.crt_path = ""
         self.time = ""
+
+        self.version = False
 
         self.setWindowTitle("ARMI")
         self.setGeometry(1050, 250, 350, 300)
@@ -270,10 +274,79 @@ class Keygen(QDialog):
     def refresh_selection4(self, text):
         self.selected_armi_number_number = text
 
+
+
+
+
+
+
+
+
+    def openssl_version(self):
+        def parse_openssl_version(version_str):
+            
+            parts = re.match(r"OpenSSL (\d+\.\d+\.\d+\w*)", version_str)
+            if not parts:
+                return None, None, None, version_str
+            
+            full_version = parts.group(1)
+            version_numbers = full_version.split(".")
+            
+            major = int(version_numbers[0])
+            minor = int(version_numbers[1]) if len(version_numbers) > 1 else 0
+            patch = version_numbers[2] if len(version_numbers) > 2 else "0"
+            
+            return major, minor, patch, full_version
+
+        try:
+            result = subprocess.run(
+                ["openssl", "version"], 
+                capture_output=True, 
+                text=True,
+                check=True
+            )
+            openssl_output = result.stdout.strip()
+            self.armi_instance.defprint(openssl_output)
+            
+            # Парсим версию
+            major, minor, patch, full_version = parse_openssl_version(openssl_output)
+            
+            if major is None:
+                self.armi_instance.defprint("Не удалось распознать версию OpenSSL")
+                return False
+            else:
+                if major >= 3:
+                    self.armi_instance.defprint("OpenSSL версии 3.x.x! Требуется версия ниже 3")
+                    return False
+                
+                if full_version != "1.1.1w":
+                    self.armi_instance.defprint("Версия OpenSSL не 1.1.1w")
+                    return False
+
+            return True
+                    
+        except subprocess.CalledProcessError:
+            self.armi_instance.defprint("Ошибка при выполнении команды openssl")
+            return False
+        except FileNotFoundError:
+            self.armi_instance.defprint("OpenSSL не установлен в системе!")
+            return False
+
+
+
+
+
+
+
+
+
+
     def check(self):
         time = str(self.number_input.text())
         password1 = str(self.input_password1.text())
         password2 = str(self.input_password2.text())
+
+        self.version = self.openssl_version()
 
         self.armi_instance.defprint("|||============|||")
 
@@ -340,7 +413,7 @@ class Keygen(QDialog):
             self.password = ""
             self.armi_instance.defprint(f"!!! Info: Password2 is less than 8 characters long", "red")
 
-        if self.directory and self.key_path and self.crt_path and time and self.password and self.selected_armi_number_number:
+        if self.directory and self.key_path and self.crt_path and time and self.password and self.selected_armi_number_number and self.version:
             self.armi_instance.defprint(
                 f"Correct Info: {self.directory} {self.textarmi}-"
                 f"{self.selected_processor}-{self.selected_organization}-"
