@@ -202,36 +202,44 @@ class OpenSSLKeyCertGenerator:
     
 
     def make_CERTIFICATE(self):
-        # Пути для сохранения ключей и сертификатов
-        ca_key_path = self.key_path  # Путь к приватному ключу вашего CA
-        ca_crt_path = self.crt_path  # Путь к корневому сертификату CA
-        # server_key_path = self.prefix + '(cert).key'
-        server_csr_path = self.prefix + '.csr'
-        server_crt_path = self.prefix + '.crt'
-
-        # # Команда для генерации приватного ключа сервера (ECDSA)
-        # generate_server_key_cmd = [
-        #     'openssl', 'ecparam', '-genkey', '-name', 'prime256v1', '-out', server_key_path
-        # ]
-
-        # Команда для создания CSR -- server_key_path
-        generate_server_csr_cmd = [
-            'openssl', 'req', '-new', '-key', self.ECDSA_key,
-            '-out', server_csr_path,
-            '-subj', f'/C=RU/ST=Moscow/L=Moscow/O=AQSI/CN=AQSI_{self.selected_armi_number}-{self.selected_armi_number_number}'
-        ]
-
-        # Команда для подписания сертификата сервера с использованием корневого сертификата
-        sign_server_crt_cmd = [
-            'openssl', 'x509', '-req', '-in', server_csr_path,
-            '-CA', ca_crt_path, '-CAkey', ca_key_path,
-            '-CAcreateserial', '-out', server_crt_path,
-            '-days', str(self.time), '-sha256'
-        ]
-
-        # Выполнение команд
-        # subprocess.run(generate_server_key_cmd, check=True)
-        subprocess.run(generate_server_csr_cmd, check=True)
-        subprocess.run(sign_server_crt_cmd, check=True)
-
-        return f"Сертификат успешно создан и подписан корневым сертификатом, сохранен {server_crt_path}"
+            ca_key_path = self.key_path  # Путь к приватному ключу CA
+            ca_crt_path = self.crt_path  # Путь к корневому сертификату CA
+            server_csr_path = self.prefix + '.csr'
+            server_crt_path = self.prefix + '.crt'
+            
+            ext_file_path = self.prefix + '.ext'
+            ext_content = """\
+        [ext]
+        keyUsage = critical, digitalSignature, keyCertSign, keyEncipherment
+        basicConstraints = critical, CA:TRUE
+        """
+            
+            with open(ext_file_path, 'w') as ext_file:
+                ext_file.write(ext_content)
+            
+            # Команда для создания CSR
+            generate_server_csr_cmd = [
+                'openssl', 'req', '-new', '-key', self.ECDSA_key,
+                '-out', server_csr_path,
+                '-subj', f'/C=RU/ST=Moscow/L=Moscow/O=AQSI/CN=AQSI_{self.selected_armi_number}-{self.selected_armi_number_number}'
+            ]
+            
+            # Команда для подписания с использованием ext-файла
+            sign_server_crt_cmd = [
+                'openssl', 'x509', '-req', '-in', server_csr_path,
+                '-CA', ca_crt_path, '-CAkey', ca_key_path,
+                '-CAcreateserial', '-out', server_crt_path,
+                '-days', str(self.time), '-sha256',
+                '-extfile', ext_file_path, 
+                '-extensions', 'ext'         
+            ]
+            
+            # Выполняем команды
+            subprocess.run(generate_server_csr_cmd, check=True)
+            subprocess.run(sign_server_crt_cmd, check=True)
+            
+            # Удаляем временный файл (опционально)
+            import os
+            os.remove(ext_file_path)
+            
+            return f"Сертификат успешно создан и подписан корневым сертификатом, сохранен {server_crt_path}"
