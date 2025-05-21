@@ -2,6 +2,7 @@ import sys
 import os
 import re
 import myopenssl
+import threading
 import subprocess
 import InfoWindow
 from PyQt5 import QtWidgets
@@ -407,8 +408,7 @@ class MyWindow(QMainWindow):
 
 
     def check(self):
-        print(self.selected_organization)    
-
+        
         time = str(self.number_input.text())
         password1 = str(self.input_password1.text())
         password2 = str(self.input_password2.text())
@@ -504,8 +504,10 @@ class MyWindow(QMainWindow):
 
     def on_crypto_finished(self):
         self.button_OK.setEnabled(True)
-        self.open_window(f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}")
-        self.close()
+        t1 = threading.Thread(target=self.open_window(f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}"), daemon=True)
+        t1.start()
+        t1.join()
+        # self.close()
 
 
     def check_files_with_prefix(self):

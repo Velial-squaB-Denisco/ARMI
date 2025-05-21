@@ -46,6 +46,13 @@ class OpenSSLKeyCertGenerator:
 
     def make_RSA_key(self, text=""):
 
+        keys_folder_name = "RSA_key"
+        keys_folder = str(f"{self.folder_path}\{keys_folder_name}")
+        os.makedirs(keys_folder, exist_ok=True)
+
+        self.folder_path = str(f"{self.keys_dir}\{self.folder_name}\{keys_folder_name}")
+        self.prefix = str(f"{self.folder_path}\{self.textarmi}-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}")
+        
         # Определяем пути для сохранения ключей
         private_key_path = self.prefix + text + ".key"
         public_key_path = self.prefix + text + ".pub"
@@ -87,9 +94,18 @@ class OpenSSLKeyCertGenerator:
         subprocess.run(generate_public_key_cmd, check=True)
         subprocess.run(generate_private_key_pwd_cmd, check=True)
 
+        self.folder_path = str(f"{self.keys_dir}\{self.folder_name}")
+
         return f"Ключи успешно созданы и сохранены в {private_key_path} и {public_key_path}."
     
     def make_ECDSA_key(self):
+        keys_folder_name = "ECDSA_KEYS"
+        keys_folder = str(f"{self.folder_path}\{keys_folder_name}")
+        os.makedirs(keys_folder, exist_ok=True)
+
+        self.folder_path = str(f"{self.keys_dir}\{self.folder_name}\{keys_folder_name}")
+        self.prefix = str(f"{self.folder_path}\{self.textarmi}-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}")
+
         # Определяем пути для сохранения ключей
         private_key_path = self.prefix + ".key"
         public_key_path = self.prefix + ".pub"
@@ -119,6 +135,8 @@ class OpenSSLKeyCertGenerator:
         subprocess.run(generate_private_key_cmd, check=True)
         subprocess.run(generate_public_key_cmd, check=True)
         subprocess.run(generate_private_key_pwd_cmd, check=True)
+
+        self.folder_path = str(f"{self.keys_dir}\{self.folder_name}")
 
         return f"Эллиптические ключи успешно созданы и сохранены в {private_key_path} и {public_key_path}"
     
@@ -202,30 +220,38 @@ class OpenSSLKeyCertGenerator:
     
 
     def make_CERTIFICATE(self):
-            ca_key_path = self.key_path  # Путь к приватному ключу CA
-            ca_crt_path = self.crt_path  # Путь к корневому сертификату CA
-            server_csr_path = self.prefix + '.csr'
-            server_crt_path = self.prefix + '.crt'
+        keys_folder_name = "CERTIFICATE"
+        keys_folder = str(f"{self.folder_path}\{keys_folder_name}")
+        os.makedirs(keys_folder, exist_ok=True)
+
+        self.folder_path = str(f"{self.keys_dir}\{self.folder_name}\{keys_folder_name}")
+        self.prefix = str(f"{self.folder_path}\{self.textarmi}-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}")
+        
+
+        ca_key_path = self.key_path  # Путь к приватному ключу CA
+        ca_crt_path = self.crt_path  # Путь к корневому сертификату CA
+        server_csr_path = self.prefix + '.csr'
+        server_crt_path = self.prefix + '.crt'
             
-            ext_file_path = self.prefix + '.ext'
-            ext_content = """\
-        [ext]
-        keyUsage = critical, digitalSignature, keyCertSign, keyEncipherment
-        basicConstraints = critical, CA:TRUE
-        """
+        ext_file_path = self.prefix + '.ext'
+        ext_content = """\
+    [ext]
+    keyUsage = critical, digitalSignature, keyCertSign, keyEncipherment
+    basicConstraints = critical, CA:TRUE
+    """
             
-            with open(ext_file_path, 'w') as ext_file:
-                ext_file.write(ext_content)
+        with open(ext_file_path, 'w') as ext_file:
+            ext_file.write(ext_content)
             
             # Команда для создания CSR
-            generate_server_csr_cmd = [
+        generate_server_csr_cmd = [
                 'openssl', 'req', '-new', '-key', self.ECDSA_key,
                 '-out', server_csr_path,
                 '-subj', f'/C=RU/ST=Moscow/L=Moscow/O=AQSI/CN=AQSI_{self.selected_armi_number}-{self.selected_armi_number_number}'
             ]
             
             # Команда для подписания с использованием ext-файла
-            sign_server_crt_cmd = [
+        sign_server_crt_cmd = [
                 'openssl', 'x509', '-req', '-in', server_csr_path,
                 '-CA', ca_crt_path, '-CAkey', ca_key_path,
                 '-CAcreateserial', '-out', server_crt_path,
@@ -235,11 +261,13 @@ class OpenSSLKeyCertGenerator:
             ]
             
             # Выполняем команды
-            subprocess.run(generate_server_csr_cmd, check=True)
-            subprocess.run(sign_server_crt_cmd, check=True)
+        subprocess.run(generate_server_csr_cmd, check=True)
+        subprocess.run(sign_server_crt_cmd, check=True)
+
+        self.folder_path = str(f"{self.keys_dir}\{self.folder_name}")
             
             # Удаляем временный файл (опционально)
-            import os
-            os.remove(ext_file_path)
             
-            return f"Сертификат успешно создан и подписан корневым сертификатом, сохранен {server_crt_path}"
+        os.remove(ext_file_path)
+            
+        return f"Сертификат успешно создан и подписан корневым сертификатом, сохранен {server_crt_path}"
