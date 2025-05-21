@@ -7,7 +7,7 @@ class InfoWindow(QDialog):
         self.text_content = f"Ваши файлы сохранены в: {text}"
 
         self.setWindowTitle("Info")
-        self.setGeometry(1050, 250, 350, 300)
+        self.setGeometry(1050, 250, 200, 200)
 
         self.main_layout = QVBoxLayout(self)
 

@@ -51,6 +51,7 @@ class MyWindow(QMainWindow):
         self.version = False
 
         self.setWindowTitle("Генерация ключей")
+        self.setGeometry(300, 250, 1350, 300)
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -120,7 +121,7 @@ class MyWindow(QMainWindow):
 
         self.label_key_layout = QHBoxLayout()
 
-        self.label_key = QLabel("Путь к приватному корневому ключу (.key):", self)
+        self.label_key = QLabel("Путь к приватному корневому ключу (armi-root.key):", self)
         self.label_key_layout.addWidget(self.label_key)
 
         self.button_key = QPushButton('Выбрать файл')
@@ -141,7 +142,7 @@ class MyWindow(QMainWindow):
 
         self.label_crt_layout = QHBoxLayout()
 
-        self.label_crt = QLabel("Путь к корневому сертификату (.crt):", self)
+        self.label_crt = QLabel("Путь к корневому сертификату (armi-root.crt):", self)
         self.label_crt_layout.addWidget(self.label_crt)
 
 
@@ -201,6 +202,7 @@ class MyWindow(QMainWindow):
 
         # Создаем виджет для ввода числа
         self.number_input = QLineEdit(self)
+        self.number_input.setSizePolicy(1, 0)
         self.number_input.setPlaceholderText('Введите число дней')
         # self.number_input.setFixedWidth(265)
         self.number_input.setText("30000")
@@ -220,6 +222,7 @@ class MyWindow(QMainWindow):
         self.layout_input_password1.addWidget(self.text_password1)
 
         self.input_password1 = QLineEdit(self)
+        self.input_password1.setSizePolicy(1, 0)
         self.input_password1.setPlaceholderText('Введите пароль')
         self.layout_input_password1.addWidget(self.input_password1)
 
@@ -232,6 +235,7 @@ class MyWindow(QMainWindow):
         self.layout_input_password2.addWidget(self.text_password2)
 
         self.input_password2 = QLineEdit(self)
+        self.input_password2.setSizePolicy(1, 0)
         self.input_password2.setPlaceholderText('Введите пароль повторно')
         self.layout_input_password2.addWidget(self.input_password2)
 
