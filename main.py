@@ -506,11 +506,13 @@ class MyWindow(QMainWindow):
         self.defprint("Файлы для перезаписи не найдены", "green")
         return True
 
+
 def app():
     application = QApplication(sys.argv)
     window = MyWindow()
     window.show()
     sys.exit(application.exec_())
+
 
 if __name__ == "__main__":
     app()
