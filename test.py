@@ -265,9 +265,7 @@ class MyWindow(QMainWindow):
         right_layout.addStretch()
 
 
-        self.selected_processor = self.combo_processor.currentText()
-        self.selected_organization = self.combo_organization.currentText().lower()
-        self.all_text += self.selected_processor + "-" + self.selected_organization
+
 
         #.......................................................................................
         #.......................................................................................
@@ -411,6 +409,10 @@ class MyWindow(QMainWindow):
 
 
     def check(self):
+
+        self.selected_processor = self.combo_processor.currentText()
+        self.selected_organization = self.combo_organization.currentText().lower()
+        self.all_text += self.selected_processor + "-" + self.selected_organization
         
         time = str(self.number_input.text())
         password1 = str(self.input_password1.text())
@@ -435,8 +437,10 @@ class MyWindow(QMainWindow):
         org = ""
         if self.selected_organization == "pk":
             org = f"{self.selected_organization.upper()}_"
+
         if self.selected_organization == "rr":
             org = ""
+
 
         key = ""
         crt = ""
