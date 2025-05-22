@@ -351,7 +351,7 @@ class MyWindow(QMainWindow):
 
             if full_version != "1.1.1w":
                 self.defprint(
-                    f"Тестирование проводилось на версии 1.1.1w (ваша версия: {full_version})")
+                    f"Тестирование проводилось на версии 1.1.1w (ваша версия: {full_version})","red" )
 
             return True
 
@@ -517,7 +517,7 @@ class MyWindow(QMainWindow):
                 self.defprint(f"File '{file_path}' exists.", "red")
                 return False
 
-        self.defprint("Файлы для перезаписи не найдены", "green")
+        #self.defprint("Файлы для перезаписи не найдены", "green")
         return True
 
 
