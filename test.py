@@ -199,7 +199,7 @@ class MyWindow(QMainWindow):
 
         self.src_time = QHBoxLayout()
 
-        self.label_cert_time = QtWidgets.QLabel("Срок сертификата")
+        self.label_cert_time = QtWidgets.QLabel("Срок сертификата (дней)")
         self.src_time.addWidget(self.label_cert_time)
 
         # Создаем виджет для ввода числа
