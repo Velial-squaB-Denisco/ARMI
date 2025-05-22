@@ -365,7 +365,7 @@ class MyWindow(QMainWindow):
                 check=True
             )
             openssl_output = result.stdout.strip()
-            self.defprint(f"Обнаружена версия OpenSSL: {openssl_output}", "blue")
+            self.defprint(f"Обнаружена версия OpenSSL: {openssl_output}")
             
             major, minor, patch, full_version = parse_openssl_version(openssl_output)
             
@@ -380,11 +380,11 @@ class MyWindow(QMainWindow):
             )
 
             if not is_supported:
-                self.defprint(f"Требуется OpenSSL >= 1.1.1 и < 3.x.x (обнаружено: {full_version})", "red")
+                self.defprint(f"Требуется версия OpenSSL >= 1.1.1w и < 3.x.x (ваша версия: {full_version})")
                 return False
 
             if full_version != "1.1.1w":
-                self.defprint(f"Тестирование проводилось на версии 1.1.1w (ваша версия: {full_version})", "yellow")
+                self.defprint(f"Тестирование проводилось на версии 1.1.1w (ваша версия: {full_version})")
 
             return True
 
@@ -490,7 +490,7 @@ class MyWindow(QMainWindow):
                 f"{self.selected_armi_number}-{self.selected_armi_number_number}"
                 f"  time: {time}  password: {self.password}", "green")
 
-            self.defprint("\n START \n", "yellow")
+            self.defprint("\n START \n")
             self.time = time
 
             generator = myopenssl.OpenSSLKeyCertGenerator(
