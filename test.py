@@ -60,6 +60,7 @@ class MyWindow(QMainWindow):
         
         # Левая панель..........................................................................
         left_layout = QVBoxLayout()
+        # left_layout.addStretch()
         #.......................................................................................
 
         self.Output = QtWidgets.QTextEdit(self)
@@ -260,6 +261,8 @@ class MyWindow(QMainWindow):
         right_layout.addLayout(keygen_layout)
 
         main_layout.addLayout(right_layout)
+
+        right_layout.addStretch()
 
 
         self.selected_processor = self.combo_processor.currentText()
