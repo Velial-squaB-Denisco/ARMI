@@ -6,7 +6,7 @@ import threading
 import subprocess
 import InfoWindow
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QFileDialog, QLineEdit, QSpinBox, QComboBox, QDialog, QTextEdit
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QFileDialog, QLineEdit
 from PyQt5.QtCore import QThread, pyqtSignal
 
 
