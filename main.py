@@ -7,7 +7,7 @@ import subprocess
 import InfoWindow
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, \
-     QFileDialog, QLineEdit
+    QFileDialog, QLineEdit
 from PyQt5.QtCore import QThread, pyqtSignal
 
 
@@ -444,7 +444,8 @@ class MyWindow(QMainWindow):
             self.defprint(
                 f"!!! Info: Password2 is less than 8 characters long", "red")
 
-        if self.directory and self.key_path and self.crt_path and time and self.password and self.selected_armi_number_number and self.version:
+        if self.directory and self.key_path and self.crt_path and time and self.password and \
+                self.selected_armi_number_number and self.version:
             self.defprint(
                 f"Ваш выбор: {self.directory} {self.textarmi}-"
                 f"{self.selected_processor}-{self.selected_organization}-"
@@ -469,15 +470,18 @@ class MyWindow(QMainWindow):
     def on_crypto_finished(self):
         self.button_OK.setEnabled(True)
         t1 = threading.Thread(target=self.open_window(
-            f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}"), daemon=True)
+            f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}" + "-" +
+            f"{self.selected_armi_number}-{self.selected_armi_number_number}"), daemon=True)
         t1.start()
         t1.join()
 
     def check_files_with_prefix(self):
 
-        if os.path.isdir(f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}"):
+        if os.path.isdir(f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}" + "-" +
+                         f"{self.selected_armi_number}-{self.selected_armi_number_number}"):
             self.defprint(
-                f"Directory '{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}' exist.", "red")
+                f"Directory '{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}" + "-" +
+                f"{self.selected_armi_number}-{self.selected_armi_number_number}' exist.", "red")
             self.directory = ""
             return False
 
@@ -488,19 +492,28 @@ class MyWindow(QMainWindow):
             f"{self.selected_organization.upper()}_armi-{self.selected_armi_number}.key",
             f"{self.selected_organization.upper()}_armi-{self.selected_armi_number}.key-pwd",
             f"{self.selected_organization.upper()}_armi-{self.selected_armi_number}.pub",
-            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}-auth.key",
-            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}-auth.pub",
-            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}.csr",
-            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}.cst",
-            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}.ext",
-            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}.key",
-            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}.key-pwd",
-            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}-{self.selected_armi_number_number}.pub",
+            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}" + "-" +
+            f"{self.selected_armi_number_number}-auth.key",
+            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}" + "-" +
+            f"{self.selected_armi_number_number}-auth.pub",
+            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}" + "-" +
+            f"{self.selected_armi_number_number}.csr",
+            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}" + "-" +
+            f"{self.selected_armi_number_number}.cst",
+            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}" + "-" +
+            f"{self.selected_armi_number_number}.ext",
+            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}" + "-" +
+            f"{self.selected_armi_number_number}.key",
+            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}" + "-" +
+            f"{self.selected_armi_number_number}.key-pwd",
+            f"armi-{self.selected_processor}-{self.selected_organization}-{self.selected_armi_number}" + "-" +
+            f"{self.selected_armi_number_number}.pub",
         ]
 
         for file in files_to_check:
             file_path = os.path.join(self.directory, file)
             if os.path.isfile(file_path):
+                self.directory = ""
                 self.defprint(f"File '{file_path}' exists.", "red")
                 return False
 
