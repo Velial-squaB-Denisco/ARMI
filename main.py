@@ -52,6 +52,7 @@ class MyWindow(QMainWindow):
         self.time = ""
 
         self.version = False
+        self.infopath = False
 
         self.setWindowTitle("Генерация ключей")
         self.setGeometry(300, 250, 1350, 300)
@@ -385,7 +386,8 @@ class MyWindow(QMainWindow):
                 boolean = True
 
             if boolean != True:
-                self.directory = ""
+                self.infopath = False
+                #self.directory = ""
             else:
                 self.check_files_with_prefix()
 
@@ -446,7 +448,7 @@ class MyWindow(QMainWindow):
                 f"!!! Внимание: Пароль2 содержит менее 8 символов", "red")
 
         if self.directory and self.key_path and self.crt_path and time and self.password and \
-                self.selected_armi_number_number and self.version:
+                self.selected_armi_number_number and self.version and self.infopath:
             self.defprint(
                 f"Ваш выбор: {self.directory} {self.textarmi}-"
                 f"{self.selected_processor}-{self.selected_organization}-"
@@ -481,8 +483,9 @@ class MyWindow(QMainWindow):
                          f"{self.selected_armi_number}-{self.selected_armi_number_number}"):
             self.defprint(
                 f"Каталог '{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}" + "-" +
-                f"{self.selected_armi_number}-{self.selected_armi_number_number}' присутствует.", "red")
-            self.directory = ""
+                f"{self.selected_armi_number}-{self.selected_armi_number_number}' уже существует.", "red")
+            #self.directory = ""
+            self.infopath = False
             return False
 
         files_to_check = [
@@ -513,10 +516,12 @@ class MyWindow(QMainWindow):
         for file in files_to_check:
             file_path = os.path.join(self.directory, file)
             if os.path.isfile(file_path):
-                self.directory = ""
+                self.infopath = False
+                #self.directory = ""
                 self.defprint(f"Файл '{file_path}' присутствует.", "red")
                 return False
 
+        self.infopath = True
         return True
 
 
