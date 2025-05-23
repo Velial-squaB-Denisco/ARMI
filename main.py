@@ -346,7 +346,7 @@ class MyWindow(QMainWindow):
 
             if not is_supported:
                 self.defprint(
-                    f"Требуется версия OpenSSL >= 1.1.1w и < 3.x.x (ваша версия: {full_version})")
+                    f"Требуется версия OpenSSL >= 1.1.1w и < 3.x.x (ваша версия: {full_version})", "red")
                 return False
 
             if full_version != "1.1.1w":
@@ -399,50 +399,50 @@ class MyWindow(QMainWindow):
         crt = ""
 
         if self.directory == "":
-            self.defprint(f"!!! Info: Not path", "red")
+            self.defprint(f"!!! Внимание: Нет пути к каталог", "red")
 
         if self.key_path == "":
-            self.defprint(f"!!! Info: Not key", "red")
+            self.defprint(f"!!! Внимание: Нет ключа", "red")
         else:
             key = f"{org}armi-root.key"
 
         if self.key_path.split('/')[-1] != (key):
             self.key_path = ""
             self.defprint(
-                f"!!! Info: This is not {self.selected_organization} root key", "red")
+                f"!!! Внимание: Это не {self.selected_organization} корневой ключ", "red")
 
         if self.crt_path == "":
-            self.defprint(f"!!! Info: Not crt", "red")
+            self.defprint(f"!!! Внимание: Нет сертификата", "red")
         else:
             crt = f"{org}armi-root.crt"
 
         if self.crt_path.split('/')[-1] != crt:
             self.key_path = ""
             self.defprint(
-                f"!!! Info: This is not {self.selected_organization} root crt", "red")
+                f"!!! Внимание: Это не {self.selected_organization} корневой сертификат", "red")
 
         if time == "":
-            self.defprint(f"!!! Info: Not time", "red")
+            self.defprint(f"!!! Внимание: Нет времени", "red")
         if time == "0":
             time = ""
-            self.defprint(f"!!! Info: Time can not be 0", "red")
+            self.defprint(f"!!! Внимание: Врем не может быть 0", "red")
         if not time.isdigit():
             time = ""
-            self.defprint(f"!!! Info: Time can not str ", "red")
+            self.defprint(f"!!! Внимание: Время не может быть строкой ", "red")
 
         if password1 == password2:
             self.password = password1
         if password1 != password2:
             self.password = ""
-            self.defprint(f"!!! Info: Passwords don't match", "red")
+            self.defprint(f"!!! Внимание: Пароли не совпадают", "red")
         if len(password1) <= 7:
             self.password = ""
             self.defprint(
-                f"!!! Info: Password1 is less than 8 characters long", "red")
+                f"!!! Внимание: Пароль1 содержит менее 8 символов", "red")
         if len(password2) <= 7:
             self.password = ""
             self.defprint(
-                f"!!! Info: Password2 is less than 8 characters long", "red")
+                f"!!! Внимание: Пароль2 содержит менее 8 символов", "red")
 
         if self.directory and self.key_path and self.crt_path and time and self.password and \
                 self.selected_armi_number_number and self.version:
@@ -450,9 +450,8 @@ class MyWindow(QMainWindow):
                 f"Ваш выбор: {self.directory} {self.textarmi}-"
                 f"{self.selected_processor}-{self.selected_organization}-"
                 f"{self.selected_armi_number}-{self.selected_armi_number_number}"
-                f"  time: {time}  password: {self.password}", "green")
+                f"  время: {time}  пароль: {self.password}", "green")
 
-            self.defprint("\n START \n")
             self.time = time
 
             generator = myopenssl.OpenSSLKeyCertGenerator(
@@ -480,8 +479,8 @@ class MyWindow(QMainWindow):
         if os.path.isdir(f"{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}" + "-" +
                          f"{self.selected_armi_number}-{self.selected_armi_number_number}"):
             self.defprint(
-                f"Directory '{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}" + "-" +
-                f"{self.selected_armi_number}-{self.selected_armi_number_number}' exist.", "red")
+                f"Каталог '{self.directory}\\armi-{self.selected_processor}-{self.selected_organization}" + "-" +
+                f"{self.selected_armi_number}-{self.selected_armi_number_number}' присутствует.", "red")
             self.directory = ""
             return False
 
@@ -514,7 +513,7 @@ class MyWindow(QMainWindow):
             file_path = os.path.join(self.directory, file)
             if os.path.isfile(file_path):
                 self.directory = ""
-                self.defprint(f"File '{file_path}' exists.", "red")
+                self.defprint(f"Файл '{file_path}' присутствует.", "red")
                 return False
 
         return True
