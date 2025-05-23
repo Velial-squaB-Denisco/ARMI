@@ -346,7 +346,7 @@ class MyWindow(QMainWindow):
 
             if not is_supported:
                 self.defprint(
-                    f"Требуется версия OpenSSL >= 1.1.1w и < 3.x.x (ваша версия: {full_version})", "red")
+                    f"Требуется версия OpenSSL >= 1.1.1w и &lt; 3.x.x (ваша версия: {full_version})", "red")
                 return False
 
             if full_version != "1.1.1w":
