@@ -250,6 +250,7 @@ class MyWindow(QMainWindow):
     def defprint(self, text, color='black'):
         html_text = f'<font color="{color}">{text}</font>'
         self.Output.append(html_text)
+        self.Output.verticalScrollBar().setValue(self.Output.verticalScrollBar().maximum())
 
     def refresh_selection1(self, text):
         self.selected_processor = text
@@ -399,7 +400,7 @@ class MyWindow(QMainWindow):
         crt = ""
 
         if self.directory == "":
-            self.defprint(f"!!! Внимание: Нет пути к каталог", "red")
+            self.defprint(f"!!! Внимание: Нет пути к каталогу", "red")
 
         if self.key_path == "":
             self.defprint(f"!!! Внимание: Нет ключа", "red")
