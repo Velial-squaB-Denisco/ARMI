@@ -55,6 +55,9 @@ class MyWindow(QMainWindow):
         self.version = False
         self.infopath = False
 
+        self.infoproc = False
+        self.infoorg = False
+
         self.setWindowTitle("Генерация ключей")
         self.setGeometry(300, 250, 1350, 300)
 
@@ -392,12 +395,24 @@ class MyWindow(QMainWindow):
             else:
                 self.check_files_with_prefix()
 
+        if self.selected_processor == " ":
+            self.infoproc = False
+            self.defprint(f"!!! Внимание: Вы не выбрали процессор", "red")
+        else:
+            self.infoproc = True
+
         org = ""
         if self.selected_organization == "pk":
             org = f"{self.selected_organization.upper()}_"
+            self.infoorg = True
 
         if self.selected_organization == "rr":
             org = ""
+            self.infoorg = True
+
+        if self.selected_organization == " ":
+            self.infoorg = False
+            self.defprint(f"!!! Внимание: Вы не выбрали организацию", "red")
 
         key = ""
         crt = ""
@@ -449,7 +464,8 @@ class MyWindow(QMainWindow):
                 f"!!! Внимание: Пароль2 содержит менее 8 символов", "red")
 
         if self.directory and self.key_path and self.crt_path and time and self.password and \
-                self.selected_armi_number_number and self.version and self.infopath:
+                self.selected_armi_number_number and self.version and self.infopath and \
+                self.infoorg and self.infoproc:
             self.defprint(
                 f"Ваш выбор: {self.directory} {self.textarmi}-"
                 f"{self.selected_processor}-{self.selected_organization}-"
