@@ -3,6 +3,7 @@ import os
 import re
 import myopenssl
 import threading
+import qdarkstyle
 import subprocess
 import InfoWindow
 from PyQt5 import QtWidgets
@@ -527,6 +528,7 @@ class MyWindow(QMainWindow):
 
 def app():
     application = QApplication(sys.argv)
+    application.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     window = MyWindow()
     window.show()
     sys.exit(application.exec_())
