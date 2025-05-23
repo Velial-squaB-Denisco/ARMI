@@ -78,7 +78,7 @@ class MyWindow(QMainWindow):
         processor_layout.addWidget(self.label_processor)
 
         self.combo_processor = QtWidgets.QComboBox()
-        self.combo_processor.addItems(["mh", "lpc"])
+        self.combo_processor.addItems(["", "mh", "lpc"])
         self.combo_processor.setFixedWidth(200)
         processor_layout.addWidget(self.combo_processor)
         self.combo_processor.currentTextChanged.connect(
@@ -88,7 +88,7 @@ class MyWindow(QMainWindow):
         processor_layout.addWidget(self.label_organization)
 
         self.combo_organization = QtWidgets.QComboBox()
-        self.combo_organization.addItems(["RR", "PK"])
+        self.combo_organization.addItems(["", "RR", "PK"])
         self.combo_organization.setFixedWidth(200)
         processor_layout.addWidget(self.combo_organization)
         self.combo_processor.currentTextChanged.connect(
