@@ -534,7 +534,6 @@ class MyWindow(QMainWindow):
             file_path = os.path.join(self.directory, file)
             if os.path.isfile(file_path):
                 self.infopath = False
-                #self.directory = ""
                 self.defprint(f"Файл '{file_path}' присутствует.", "red")
                 return False
 
